@@ -11,7 +11,7 @@ RUN dotnet publish -c Release -o out
 
 # Build runtime image
 #FROM microsoft/dotnet:2.1-aspnetcore-runtime
-FROM microsoft/dotnet:2.1-runtime-deps-stretch-arm32v7 AS runtime
+FROM microsoft/dotnet:2.1-runtime-stretch-slim-arm32v7 AS runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "DynuPdate.dll"]
