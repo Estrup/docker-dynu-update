@@ -25,13 +25,20 @@ namespace DynuPdate
             _registry = new Registry();
             _registry.Schedule(() =>
             {
-                var iptask = IpHelp.GetIp();
-                iptask.Wait();
-                var ip = iptask.Result;
-                Console.WriteLine(iptask.Result);
+                try
+                {
+                    var iptask = IpHelp.GetIp();
+                    iptask.Wait();
+                    var ip = iptask.Result;
+                    Console.WriteLine(iptask.Result);
 
-                var updatetask = IpHelp.UpdateIp(options.Hostname, ip, options.Username, options.Password);
-                updatetask.Wait();
+                    var updatetask = IpHelp.UpdateIp(options.Hostname, ip, options.Username, options.Password);
+                    updatetask.Wait();
+                }
+                catch(Exception ex){
+                    Console.WriteLine($"Error: { ex.Message }");
+                    _logger.LogError($"Error: { ex.Message }", ex);
+                }
 
             }).ToRunEvery(options.Interval).Seconds();
         }
