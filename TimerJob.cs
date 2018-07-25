@@ -34,8 +34,19 @@ namespace DynuPdate
 
                     var updatetask = IpHelp.UpdateIp(options.Hostname, ip, options.Username, options.Password);
                     updatetask.Wait();
+
                 }
-                catch(Exception ex){
+                catch (AggregateException ae)
+                {
+                    ae.Handle((x) =>
+                   {
+                       Console.WriteLine($"AgErrorTypeName: { x.GetType().Name }");
+                       Console.WriteLine($"AgError: { x.Message }");
+                       return false; // Let anything else stop the application.
+                   });
+                }
+                catch (Exception ex)
+                {
                     Console.WriteLine($"Error: { ex.Message }");
                     _logger.LogError($"Error: { ex.Message }", ex);
                 }
@@ -68,7 +79,7 @@ namespace DynuPdate
 
         public void Dispose()
         {
-            
+
         }
     }
     #endregion
